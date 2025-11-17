@@ -1453,6 +1453,57 @@ body {
     padding-left: 35px;
 }
 
+/* Sidebar footer (user info + logout) */
+.sidebar-footer {
+    padding: 14px 20px;
+    border-top: 1px solid var(--border-gray);
+    background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 100%);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sidebar-user {
+    color: var(--primary-blue);
+    font-weight: 700;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.logout-btn {
+    display: inline-block;
+    padding: 8px 12px;
+    background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+    color: var(--white);
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 700;
+    text-align: center;
+    box-shadow: 0 6px 14px rgba(255, 107, 107, 0.12);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.logout-btn:hover {
+    transform: translateY(-2px);
+    opacity: 0.95;
+    box-shadow: 0 10px 22px rgba(255, 107, 107, 0.18);
+}
+
+/* Analytics chart wrapper to keep charts consistent */
+.chart-wrapper {
+    width: 100%;
+    height: 320px;
+    background: var(--white);
+    padding: 12px;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0,56,168,0.06);
+    margin-top: 12px;
+}
+
+.chart-wrapper canvas { width: 100% !important; height: 100% !important; }
+
 /* Fade animation for dropdown */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-5px); }

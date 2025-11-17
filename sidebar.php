@@ -1,5 +1,8 @@
 <?php 
 require 'config.php';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 $currentPage = basename($_SERVER['PHP_SELF']);
 ?>
 <!DOCTYPE html>
@@ -65,7 +68,14 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                         </div>
                     </div>
                 
+                    <?php if (!empty($_SESSION['user_id'])): ?>
+                        <a href="analytics.php" class="<?= $currentPage == 'analytics.php' ? 'active' : '' ?>">📊 Analytics</a>
+                    <?php endif; ?>
                 </nav>
+                <!-- Sidebar footer: logout only -->
+                <div class="sidebar-footer">
+                    <a href="logout.php" class="logout-btn">Logout</a>
+                </div>
         </div>
 
     <!-- Mobile Menu Toggle (for responsive design) -->
