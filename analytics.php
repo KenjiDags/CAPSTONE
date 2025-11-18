@@ -39,6 +39,12 @@ if (function_exists('require_role')) {
 
   <section>
     <h3>Low Stock Items</h3>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;">
+      <div style="color:#666;font-weight:600">Items at or below reorder point</div>
+      <div>
+        <button id="exportLowCsv" class="btn-export">Export CSV</button>
+      </div>
+    </div>
     <div id="lowStock"></div>
   </section>
 
@@ -132,23 +138,34 @@ fetch('analytics_data.php')
       itemSelect.dispatchEvent(new Event('change'));
     }
 
-    // Low stock list
+    // Low stock list (render as table and wire export)
     const low = json.low_stock || [];
     const lowDiv = document.getElementById('lowStock');
     if (low.length === 0) {
       lowDiv.innerHTML = '<p>No low-stock items.</p>';
     } else {
-      const ul = document.createElement('ul');
-      ul.style.listStyle = 'none';
-      ul.style.padding = '0';
+      const table = document.createElement('table');
+      table.className = 'analytics-table';
+      const thead = document.createElement('thead');
+      thead.innerHTML = '<tr><th>Stock #</th><th>Item Name</th><th>Quantity</th><th>Reorder Point</th></tr>';
+      table.appendChild(thead);
+      const tbody = document.createElement('tbody');
       low.forEach(item => {
-        const li = document.createElement('li');
-        li.style.padding = '8px 0';
-        li.style.borderBottom = '1px solid #eee';
-        li.textContent = `${item.stock_number} — ${item.item_name} (qty: ${item.quantity}, reorder: ${item.reorder_point})`;
-        ul.appendChild(li);
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${item.stock_number}</td><td>${item.item_name}</td><td>${item.quantity}</td><td>${item.reorder_point}</td>`;
+        tbody.appendChild(tr);
       });
-      lowDiv.appendChild(ul);
+      table.appendChild(tbody);
+      lowDiv.appendChild(table);
+    }
+
+    // Export button: download CSV from server endpoint
+    const exportBtn = document.getElementById('exportLowCsv');
+    if (exportBtn) {
+      exportBtn.addEventListener('click', () => {
+        // navigate to the CSV download endpoint; browser will handle the file save
+        window.location.href = 'analytics_export.php?format=csv';
+      });
     }
 
   }).catch(err => {
