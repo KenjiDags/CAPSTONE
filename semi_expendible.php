@@ -1,21 +1,17 @@
 <?php
-include 'config.php'; // This gives us $conn (MySQLi connection)
+include 'config.php'; 
 include 'sidebar.php';
 
-// Get category from URL parameter, default to 'Other PPE'
 $category = isset($_GET['category']) ? $_GET['category'] : 'Other PPE';
 
-// Valid categories based on the data
 $valid_categories = ['Other PPE', 'Office Equipment', 'ICT Equipment', 'Communication Equipment', 'Furniture and Fixtures'];
 
 if (!in_array($category, $valid_categories)) {
     $category = 'Other PPE';
 }
 
-// Search functionality
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 
-// Build SQL query
 $sql = "SELECT * FROM semi_expendable_property WHERE category = ?";
 $types = "s";
 $params = [$category];
@@ -35,7 +31,6 @@ try {
         throw new Exception("Prepare failed: " . $conn->error);
     }
     
-    // Bind parameters dynamically
     if (!empty($params)) {
         $stmt->bind_param($types, ...$params);
     }

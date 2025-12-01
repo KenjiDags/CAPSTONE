@@ -70,7 +70,7 @@ h2::after {
     color: white;
     font-weight: bold;
     z-index: 1000;
-    transform: translateX(calc(100vw + 50px)); /* move it completely off screen */
+    transform: translateX(calc(100vw + 50px)); /* move it off screen */
     transition: transform 0.3s ease;
 }
 
@@ -141,7 +141,7 @@ input[readonly] {
     margin-top: 5px;
     display: block;
 }
-/* Stock status indicator styles */
+/* Stock status indicator */
 .stock-status {
     margin-top: 5px;
     padding: 8px 12px;

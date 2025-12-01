@@ -24,9 +24,8 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
             <?php
                 $dropdownActive = in_array($currentPage, ['inventory.php', 'ris.php', 'add_ris.php', 'view_ris.php', 'rsmi.php', 'SC.php', 'view_sc.php', 'rpci.php']);
-                $expendablesDropdownActive = in_array($currentPage, ['PC.php', 'ics.php', 'rspi.php','ict_registry.php']);
+                $expendablesDropdownActive = in_array($currentPage, ['semi_expendible.php', 'ics.php', 'rspi.php','ict_registry.php']);
                 $ppeDropdownActive = in_array($currentPage, ['ppe_item1.php', 'ppe_item2.php']);
-
                 ?>
 
                 <nav>

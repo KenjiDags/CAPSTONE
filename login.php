@@ -21,7 +21,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute();
             $res = $stmt->get_result();
             if ($row = $res->fetch_assoc()) {
-                if (password_verify($password, $row['password'])) {
+              //unhashed password for now
+                if ($password === $row['password']) {
                     session_regenerate_id(true);
                     $_SESSION['user_id'] = $row['id'];
                     $_SESSION['username'] = $row['username'];

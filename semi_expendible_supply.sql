@@ -185,3 +185,12 @@ INSERT INTO semi_expendable_property (date, ics_rrsp_no, semi_expendable_propert
 ('2021-03-17', '21-05', '21-101-03', 'Coffee Percolator, 15 liters capacity, Innoflex', 5, 1, 'Daisy D. Jamorabon', 1, 5860.00, 'Other PPE'),
 ('2021-03-17', '21-06', '21-101-10', 'Coffee Maker, 10-15 cups capacity, tefal', 5, 1, 'Daisy D. Jamorabon', 1, 6805.00, 'Other PPE'),
 ('2021-05-04', '21-09', '21-101-14', 'Solar Panel', 5, 1, 'Mary Jane C. Bernales', 1, 2030.00, 'Other PPE');
+
+CREATE TABLE ict_registry (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    item_name VARCHAR(255),
+    issued_qty INT,
+    date DATE NOT NULL,
+    property_no VARCHAR(255)
+);
+
