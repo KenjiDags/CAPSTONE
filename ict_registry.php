@@ -284,7 +284,7 @@ $recap_result = $conn->query("
             <button onclick="openAddModal()" class="export-btn">
                 <i class="fas fa-plus"></i> Add New Item
             </button>
-            <a href="ict_export.php" class="export-btn" target="_blank">
+            <a href="ict_export.php" class="export-btn">
                 📄 Export to PDF
             </a>
         </div>
