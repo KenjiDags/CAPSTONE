@@ -27,6 +27,7 @@ SET time_zone = "+00:00";
 -- Table structure for table `inventory_entries`
 --
 
+
 CREATE TABLE `inventory_entries` (
   `entry_id` int(11) NOT NULL,
   `item_id` int(11) DEFAULT NULL,
@@ -71,7 +72,7 @@ CREATE TABLE `items` (
 --
 -- Dumping data for table `items`
 --
-
+  
 INSERT INTO `items` (`item_id`, `stock_number`, `item_name`, `description`, `unit`, `reorder_point`, `parent_item_id`, `quantity_on_hand`, `unit_cost`, `initial_quantity`, `average_unit_cost`, `calculated_unit_cost`, `calculated_quantity`, `iar`) VALUES
 (1, 'A.01.a', 'ARCHFILE FOLDER', 'Tagila Lock', 'pc', 11, NULL, 11, 11.0000, 11, NULL, NULL, NULL, NULL),
 (2, 'A.02.a', 'AIR FRESHINER REFILL', 'Automatic Spray Refill(glade)', 'can', 0, NULL, 0, 10.0000, 0, NULL, NULL, NULL, NULL),
