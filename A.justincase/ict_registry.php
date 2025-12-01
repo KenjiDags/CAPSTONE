@@ -1,5 +1,4 @@
 <?php
-session_start();
 require_once 'config.php';
 
 // Handle form submissions
@@ -265,45 +264,6 @@ $recap_result = $conn->query("
             margin-bottom: 20px;
             border: 1px solid #c3e6cb;
         }
-
-        .autocomplete-items {
-            position: absolute;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-top: none;
-            max-height: 150px;
-            overflow-y: auto;
-            z-index: 1001;
-            width: 100%;
-        }
-
-        .autocomplete-item {
-            padding: 8px;
-            cursor: pointer;
-        }
-
-        .autocomplete-item:hover {
-            background-color: #f1f1f1;
-        }
-        .table-container {
-            width: 100%;
-            overflow-x: auto;       /* enables horizontal scroll */
-            -webkit-overflow-scrolling: touch; /* smooth scrolling on mobile */
-            margin-bottom: 20px;
-        }
-
-        table {
-            width: 100%;
-            min-width: 1400px;      /* ensures horizontal scroll appears if needed */
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            text-align: left;
-            white-space: nowrap;     /* prevents column text from wrapping */
-        }
     </style>
 </head>
 <body>
@@ -329,63 +289,60 @@ $recap_result = $conn->query("
             </a>
         </div>
 
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Reference No.</th>
-                        <th>Semi-Expendable Property No.</th>
-                        <th>Item Description</th>
-                        <th>Estimated Useful Life</th>
-                        <th>Issued Qty.</th>
-                        <th>Issued Officer</th>
-                        <th>Returned Qty.</th>
-                        <th>Returned Officer</th>
-                        <th>Re-issued Qty.</th>
-                        <th>Re-issued Officer</th>
-                        <th>Disposed Qty.</th>
-                        <th>Balance Qty.</th>
-                        <th>Amount (TOTAL)</th>
-                        <th>Remarks</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php 
-                    if ($result && $result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            $formatted_date = date('n/j/Y', strtotime($row['date']));
-                            echo '<tr>';
-                            echo '<td>' . htmlspecialchars($formatted_date) . '</td>';
-                            echo '<td>' . htmlspecialchars($row['reference_no']) . '</td>';
-                            echo '<td>' . htmlspecialchars($row['property_no']) . '</td>';
-                            echo '<td>' . htmlspecialchars($row['item_description']) . '</td>';
-                            echo '<td>' . htmlspecialchars($row['useful_life']) . '</td>';
-                            echo '<td>' . htmlspecialchars($row['issued_qty']) . '</td>';
-                            echo '<td>' . htmlspecialchars($row['issued_officer']) . '</td>';
-                            echo '<td>' . htmlspecialchars($row['returned_qty'] ?: '-') . '</td>';
-                            echo '<td>' . htmlspecialchars($row['returned_officer'] ?: '-') . '</td>';
-                            echo '<td>' . htmlspecialchars($row['reissued_qty'] ?: '-') . '</td>';
-                            echo '<td>' . htmlspecialchars($row['reissued_officer'] ?: '-') . '</td>';
-                            echo '<td>' . htmlspecialchars($row['disposed_qty'] ?: '-') . '</td>';
-                            echo '<td>' . htmlspecialchars($row['balance_qty']) . '</td>';
-                            echo '<td class="currency">₱ ' . number_format($row['total_amount'], 2) . '</td>';
-                            echo '<td>' . htmlspecialchars($row['remarks'] ?: '-') . '</td>';
-                            echo '<td class="actions-cell">';
-                            echo '<button class="btn-edit" onclick="editEntry(' . $row['id'] . ')">Edit</button>';
-                            echo '<button class="btn-delete" onclick="deleteEntry(' . $row['id'] . ')">Delete</button>';
-                            echo '</td>';
-                            echo '</tr>';
-                        }
-                    } else {
-                        echo '<tr><td colspan="16">No ICT registry entries found.</td></tr>';
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Reference No.</th>
+                    <th>Semi-Expendable Property No.</th>
+                    <th>Item Description</th>
+                    <th>Estimated Useful Life</th>
+                    <th>Issued Qty.</th>
+                    <th>Issued Officer</th>
+                    <th>Returned Qty.</th>
+                    <th>Returned Officer</th>
+                    <th>Re-issued Qty.</th>
+                    <th>Re-issued Officer</th>
+                    <th>Disposed Qty.</th>
+                    <th>Balance Qty.</th>
+                    <th>Amount (TOTAL)</th>
+                    <th>Remarks</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php 
+                if ($result && $result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        $formatted_date = date('n/j/Y', strtotime($row['date']));
+                        echo '<tr>';
+                        echo '<td>' . htmlspecialchars($formatted_date) . '</td>';
+                        echo '<td>' . htmlspecialchars($row['reference_no']) . '</td>';
+                        echo '<td>' . htmlspecialchars($row['property_no']) . '</td>';
+                        echo '<td>' . htmlspecialchars($row['item_description']) . '</td>';
+                        echo '<td>' . htmlspecialchars($row['useful_life']) . '</td>';
+                        echo '<td>' . htmlspecialchars($row['issued_qty']) . '</td>';
+                        echo '<td>' . htmlspecialchars($row['issued_officer']) . '</td>';
+                        echo '<td>' . htmlspecialchars($row['returned_qty'] ?: '-') . '</td>';
+                        echo '<td>' . htmlspecialchars($row['returned_officer'] ?: '-') . '</td>';
+                        echo '<td>' . htmlspecialchars($row['reissued_qty'] ?: '-') . '</td>';
+                        echo '<td>' . htmlspecialchars($row['reissued_officer'] ?: '-') . '</td>';
+                        echo '<td>' . htmlspecialchars($row['disposed_qty'] ?: '-') . '</td>';
+                        echo '<td>' . htmlspecialchars($row['balance_qty']) . '</td>';
+                        echo '<td class="currency">₱ ' . number_format($row['total_amount'], 2) . '</td>';
+                        echo '<td>' . htmlspecialchars($row['remarks'] ?: '-') . '</td>';
+                        echo '<td class="actions-cell">';
+                        echo '<button class="btn-edit" onclick="editEntry(' . $row['id'] . ')">Edit</button>';
+                        echo '<button class="btn-delete" onclick="deleteEntry(' . $row['id'] . ')">Delete</button>';
+                        echo '</td>';
+                        echo '</tr>';
                     }
-                    ?>
-                </tbody>
-            </table>
-        </div>
-
+                } else {
+                    echo '<tr><td colspan="16">No ICT registry entries found.</td></tr>';
+                }
+                ?>
+            </tbody>
+        </table>
 
         <h2>Recapitulation</h2>
         <table>
@@ -442,7 +399,6 @@ $recap_result = $conn->query("
                     <div class="form-group full-width">
                         <label>Item Description</label>
                         <textarea name="item_description" id="itemDescription" rows="3" required></textarea>
-                        <div id="autocompleteList" class="autocomplete-items"></div>
                     </div>
                     <div class="form-group">
                         <label>Issued Quantity</label>
@@ -565,66 +521,6 @@ $recap_result = $conn->query("
                     const sidebar = document.querySelector('.sidebar');
                     sidebar.classList.toggle('active');
                 });
-            }
-        });
-
-        // Auto-fill ICT entry based on inventory
-        document.getElementById('itemDescription').addEventListener('input', function() {
-            const query = this.value;
-
-            if (query.length >= 2) { // start searching after 2 chars
-                fetch(`inventory_search.php?query=${encodeURIComponent(query)}`)
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.length > 0) {
-                            const item = data[0]; // pick first match
-                            document.getElementById('propertyNo').value = item.property_no;
-                            document.getElementById('totalAmount').value = item.unit_cost;
-                            document.getElementById('issuedQty').value = 1; // default
-                            // Optional: make quantity or total amount readonly if you want
-                        }
-                    })
-                    .catch(err => console.error(err));
-            }
-        });
-
-        const itemDescription = document.getElementById('itemDescription');
-        const autocompleteList = document.getElementById('autocompleteList');
-
-        itemDescription.addEventListener('input', function() {
-            const query = this.value;
-            autocompleteList.innerHTML = ''; // clear previous results
-
-            if (query.length < 2) return; // start search after 2 chars
-
-            fetch(`semi_expendible_search.php?query=${encodeURIComponent(query)}`)
-                .then(res => res.json())
-                .then(data => {
-                    if (data.length === 0) return;
-
-                    data.forEach(item => {
-                        const div = document.createElement('div');
-                        div.classList.add('autocomplete-item');
-                        div.textContent = `${item.description} (${item.property_no})`;
-
-                        div.addEventListener('click', function() {
-                            itemDescription.value = item.description;
-                            document.getElementById('propertyNo').value = item.property_no;
-                            document.getElementById('totalAmount').value = item.unit_cost;
-                            document.getElementById('issuedQty').value = 1;
-                            autocompleteList.innerHTML = ''; // clear dropdown
-                        });
-
-                        autocompleteList.appendChild(div);
-                    });
-                })
-                .catch(err => console.error(err));
-        });
-
-        // Close dropdown if clicked outside
-        document.addEventListener('click', function(e) {
-            if (e.target !== itemDescription) {
-                autocompleteList.innerHTML = '';
             }
         });
     </script>

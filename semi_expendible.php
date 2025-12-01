@@ -230,7 +230,7 @@ $total_quantity = array_sum(array_column($items, 'quantity_balance'));
             border-radius: 4px;
             margin-bottom: 20px;
         }
-        .alert-error {
+        .alert-error { 
             background: #fee2e2;
             color: #991b1b;
             border: 1px solid #fca5a5;

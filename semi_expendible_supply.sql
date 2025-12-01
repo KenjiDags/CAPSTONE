@@ -191,6 +191,18 @@ CREATE TABLE ict_registry (
     item_name VARCHAR(255),
     issued_qty INT,
     date DATE NOT NULL,
-    property_no VARCHAR(255)
+    property_no VARCHAR(255),
+    reference_no INT NOT NULL,
+    item_description VARCHAR(255),
+    useful_life VARCHAR(255),
+    issued_officer VARCHAR(255),
+    returned_qty INT,
+    returned_officer VARCHAR(255),
+    reissued_qty INT,
+    reissued_officer VARCHAR(255),
+    disposed_qty INT,
+    balance_qty INT,
+    total_amount INT,
+    remarks VARCHAR(255),
+    created_at DATE NOT NULL
 );
-
