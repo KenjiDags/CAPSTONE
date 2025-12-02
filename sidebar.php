@@ -29,6 +29,13 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                 ?>
 
                 <nav>
+
+                    <div class="dropdown">
+                        <?php if (!empty($_SESSION['user_id'])): ?>
+                            <a href="analytics.php" class="<?= $currentPage == 'analytics.php' ? 'active' : '' ?>">📊 Analytics</a>
+                        <?php endif; ?>
+                    </div>
+
                     <div class="dropdown <?= $dropdownActive ? 'open' : '' ?>">
                         <button class="dropdown-toggle <?= $dropdownActive ? 'active' : '' ?>">
                             🗂️ Office Supplies
@@ -67,9 +74,6 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                         </div>
                     </div>
                 
-                    <?php if (!empty($_SESSION['user_id'])): ?>
-                        <a href="analytics.php" class="<?= $currentPage == 'analytics.php' ? 'active' : '' ?>">📊 Analytics</a>
-                    <?php endif; ?>
                 </nav>
                 <!-- Sidebar footer: logout only -->
                 <div class="sidebar-footer">
