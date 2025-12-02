@@ -1,21 +1,17 @@
 <?php
-include 'config.php'; // This gives us $conn (MySQLi connection)
+include 'config.php'; 
 include 'sidebar.php';
 
-// Get category from URL parameter, default to 'Other PPE'
 $category = isset($_GET['category']) ? $_GET['category'] : 'Other PPE';
 
-// Valid categories based on the data
 $valid_categories = ['Other PPE', 'Office Equipment', 'ICT Equipment', 'Communication Equipment', 'Furniture and Fixtures'];
 
 if (!in_array($category, $valid_categories)) {
     $category = 'Other PPE';
 }
 
-// Search functionality
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 
-// Build SQL query
 $sql = "SELECT * FROM semi_expendable_property WHERE category = ?";
 $types = "s";
 $params = [$category];
@@ -35,7 +31,6 @@ try {
         throw new Exception("Prepare failed: " . $conn->error);
     }
     
-    // Bind parameters dynamically
     if (!empty($params)) {
         $stmt->bind_param($types, ...$params);
     }
@@ -68,6 +63,16 @@ $total_quantity = array_sum(array_column($items, 'quantity_balance'));
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         /* Minimal styling - use your existing styles */
+
+        h2 {
+            color: #0038a8;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-align: center;
+            text-shadow: 0 2px 4px rgba(0, 56, 168, 0.1);
+            position: relative;
+        }
         .category-tabs {
             display: flex;
             gap: 10px;
@@ -235,7 +240,7 @@ $total_quantity = array_sum(array_column($items, 'quantity_balance'));
 <body>
     <div class="container">
         <header>
-            <h1><?php echo htmlspecialchars($category); ?></h1>
+            <h2><?php echo htmlspecialchars($category); ?></h2>
             <p>TESDA-CAR Semi-Expendable Property Registry</p>
         </header>
 

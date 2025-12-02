@@ -249,7 +249,7 @@
             <button class="print-btn" onclick="window.print()">
                 🖨️ Print/Save as PDF
             </button>
-            <button class="back-btn" onclick="history.back()">
+            <button class="btn btn-secondary" onclick="window.location.href='ict_registry.php'">
                 ← Back to Registry
             </button>
         </div>
