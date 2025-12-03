@@ -388,28 +388,30 @@ $recap_result = $conn->query("
 
 
         <h2>Recapitulation</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Property No.</th>
-                    <th>Total Quantity Issued</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php 
-                if ($recap_result && $recap_result->num_rows > 0) {
-                    while ($row = $recap_result->fetch_assoc()) {
-                        echo '<tr>';
-                        echo '<td>' . htmlspecialchars($row['property_no']) . '</td>';
-                        echo '<td>' . htmlspecialchars($row['total_issued']) . '</td>';
-                        echo '</tr>';
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Property No.</th>
+                        <th>Total Quantity Issued</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php 
+                    if ($recap_result && $recap_result->num_rows > 0) {
+                        while ($row = $recap_result->fetch_assoc()) {
+                            echo '<tr>';
+                            echo '<td>' . htmlspecialchars($row['property_no']) . '</td>';
+                            echo '<td>' . htmlspecialchars($row['total_issued']) . '</td>';
+                            echo '</tr>';
+                        }
+                    } else {
+                        echo '<tr><td colspan="2">No recapitulation data found.</td></tr>';
                     }
-                } else {
-                    echo '<tr><td colspan="2">No recapitulation data found.</td></tr>';
-                }
-                ?>
-            </tbody>
-        </table>
+                    ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- Add/Edit Modal -->

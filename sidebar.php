@@ -36,9 +36,9 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                         <div class="dropdown-menu">
                             <a href="inventory.php" class="<?= $currentPage == 'inventory.php' ? 'active' : '' ?>">📋 Supply List</a>
                             <a href="ris.php" class="<?= in_array($currentPage, ['ris.php', 'add_ris.php', 'view_ris.php']) ? 'active' : '' ?>">📑 RIS</a>
-                            <a href="rsmi.php" class="<?= $currentPage == 'rsmi.php' ? 'active' : '' ?>">🛡️ RSMI</a>
-                            <a href="SC.php" class="<?= in_array($currentPage, ['SC.php', 'view_sc.php']) ? 'active' : '' ?>">♻️ SC</a>
-                            <a href="rpci.php" class="<?= $currentPage == 'rpci.php' ? 'active' : '' ?>">⚙️ RPCI</a>
+                            <a href="rsmi.php" class="<?= $currentPage == 'rsmi.php' ? 'active' : '' ?>">📑 RSMI</a>
+                            <a href="SC.php" class="<?= in_array($currentPage, ['SC.php', 'view_sc.php']) ? 'active' : '' ?>">📑 SC</a>
+                            <a href="rpci.php" class="<?= $currentPage == 'rpci.php' ? 'active' : '' ?>">📑 RPCI</a>
                         </div>
                     </div>
 
@@ -48,10 +48,10 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                             🧰 Semi Expendables
                         </button>
                         <div class="dropdown-menu">
-                            <a href="semi_expendible.php" class="<?= $currentPage == 'semi_expendible.php' ? 'active' : '' ?>">Supply List</a>
-                            <a href="rspi.php" class="<?= $currentPage == 'rspi.php' ? 'active' : '' ?>">📦 RSPI</a>
-                            <a href="ics.php" class="<?= $currentPage == 'ics.php' ? 'active' : '' ?>">📦 ICS</a>
-                            <a href="ict_registry.php" class="<?= $currentPage == 'ict_registry.php' ? 'active' : '' ?>">📦 ICT</a>
+                            <a href="semi_expendible.php" class="<?= $currentPage == 'semi_expendible.php' ? 'active' : '' ?>">📋 Supply List</a>
+                            <a href="rspi.php" class="<?= $currentPage == 'rspi.php' ? 'active' : '' ?>">📑 RSPI</a>
+                            <a href="ics.php" class="<?= $currentPage == 'ics.php' ? 'active' : '' ?>">📑 ICS</a>
+                            <a href="ict_registry.php" class="<?= $currentPage == 'ict_registry.php' ? 'active' : '' ?>">📑 ICT</a>
 
                         </div>
                     </div>

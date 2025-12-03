@@ -206,3 +206,4 @@ CREATE TABLE ict_registry (
     remarks VARCHAR(255),
     created_at DATE NOT NULL
 );
+
