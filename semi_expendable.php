@@ -17,10 +17,10 @@ $types = "s";
 $params = [$category];
 
 if (!empty($search)) {
-    $sql .= " AND (item_description LIKE ? OR semi_expendable_property_no LIKE ? OR office_officer_issued LIKE ?)";
+    $sql .= " AND (item_description LIKE ? OR semi_expendable_property_no LIKE ? OR office_officer_issued LIKE ? OR item LIKE ?)";
     $search_param = "%$search%";
-    $params = array_merge($params, [$search_param, $search_param, $search_param]);
-    $types = "ssss";
+    $params = array_merge($params, [$search_param, $search_param, $search_param, $search_param]);
+    $types = "sssss";
 }
 
 $sql .= " ORDER BY date DESC";
@@ -241,7 +241,7 @@ $total_quantity = array_sum(array_column($items, 'quantity_balance'));
     <div class="container">
         <header>
             <h2><?php echo htmlspecialchars($category); ?></h2>
-            <p>TESDA-CAR Semi-Expendable Property Registry</p>
+            <p style="text-align: center;">TESDA-CAR Semi-Expendable Property Registry</p>
         </header>
 
         <!-- Category Tabs -->
@@ -311,7 +311,8 @@ $total_quantity = array_sum(array_column($items, 'quantity_balance'));
                         <th>Date</th>
                         <th>ICS/RRSP No.</th>
                         <th>Property No.</th>
-                        <th>Item Description</th>
+                        <th>Item</th>
+                        <th>Description</th>
                         <th>Useful Life</th>
                         <th>Qty Issued</th>
                         <th>Officer/Office Issued</th>
@@ -343,10 +344,11 @@ $total_quantity = array_sum(array_column($items, 'quantity_balance'));
                                 <td><?php echo date('M j, Y', strtotime($item['date'])); ?></td>
                                 <td><?php echo htmlspecialchars($item['ics_rrsp_no']); ?></td>
                                 <td><?php echo htmlspecialchars($item['semi_expendable_property_no']); ?></td>
+                                <td title="<?php echo htmlspecialchars($item['item_name']); ?>">
+                                    <?php echo htmlspecialchars(strlen($item['item_name']) > 50 ? substr($item['item_name'], 0, 50) . '...' : $item['item_name']); ?>
+                                </td>
                                 <td title="<?php echo htmlspecialchars($item['item_description']); ?>">
-                                    <?php echo htmlspecialchars(strlen($item['item_description']) > 50 ? 
-                                        substr($item['item_description'], 0, 50) . '...' : 
-                                        $item['item_description']); ?>
+                                    <?php echo htmlspecialchars(strlen($item['item_description']) > 50 ? substr($item['item_description'], 0, 50) . '...' : $item['item_description']); ?>
                                 </td>
                                 <td><?php echo $item['estimated_useful_life']; ?> years</td>
                                 <td><?php echo number_format($item['quantity_issued']); ?></td>

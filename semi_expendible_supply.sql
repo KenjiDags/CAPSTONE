@@ -145,11 +145,11 @@ CREATE TABLE semi_expendable_property (
 
 -- Other PPE Category
 INSERT INTO semi_expendable_property (date, ics_rrsp_no, semi_expendable_property_no, item_description, estimated_useful_life, quantity_issued, office_officer_issued, quantity_balance, amount_total, category) VALUES
-('2022-12-09', '22-20', 'HV-22-101-31', 'Water Dispenser (hot, cold and normal) with bottom load, Everest, model ETWD601BL', 5, 1, 'Billy F. Balingit', 1, 9400.00, 'Other PPE'),
+('2022-12-09', '22-20', 'HV-22-101-31', 'Water Dispenser ,(hot, cold and normal) with bottom load, Everest, model ETWD601BL', 5, 1, 'Billy F. Balingit', 1, 9400.00, 'Other PPE'),
 ('2022-05-10', '22-28', 'LV-22-101-41', 'Whiteboard with aluminum frame and stand, 2x3', 5, 1, 'Belma G. Angoting', 1, 4350.00, 'Other PPE'),
 ('2022-05-10', '22-29', 'LV-22-101-42', 'Whiteboard with aluminum frame and stand, 2x3', 5, 1, 'Mary Jane C. Bernales', 1, 4350.00, 'Other PPE'),
 ('2022-02-07', '22-30', 'HV-22-101-43 to 44', 'Bathroom Toilet Tissue, Panasonic model DG4HSJP', 5, 2, 'Billy F. Balingit', 2, 17000.00, 'Other PPE'),
-('2022-10-18', '22-32', 'HV-22-101-46', 'Water Dispenser (hot, cold and normal) with bottom load, Everest, model ETWD601BL', 5, 1, 'Billy F. Balingit', 1, 9400.00, 'Other PPE'),
+('2022-10-18', '22-32', 'HV-22-101-46', 'Water Dispenser ,(hot, cold and normal) with bottom load, Everest, model ETWD601BL', 5, 1, 'Billy F. Balingit', 1, 9400.00, 'Other PPE'),
 ('2022-06-12', '22-37', 'LV-22-101-54', 'Coffee Urn Percolator, Boiler, 40 cups capacity, Dynamex 632', 5, 1, 'Mary Jane C. Bernales', 1, 4467.00, 'Other PPE');
 
 -- Office Equipment Category
@@ -157,9 +157,9 @@ INSERT INTO semi_expendable_property (date, ics_rrsp_no, semi_expendable_propert
 ('2022-09-03', '22-01', 'LV-22-101-02 to 03', 'WEBCAM FULL HD, A4 TECH, PK-940HA; True 1080p @ 30fps or true 720p @ 60fps; autofocus with fixed mounting clip', 5, 2, 'Daisy D. Jamorabon', 2, 7300.00, 'Office Equipment'),
 ('2022-09-03', '22-01', 'LV-22-101-04', 'TRIPOD, camera; universal; 2 m or longer; stable', 5, 1, 'Daisy D. Jamorabon', 1, 950.00, 'Office Equipment'),
 ('2022-11-03', '22-02', 'HV-22-101-05', 'Webcam Full HD, Logitech, True 1080p @ 30fps or 720p@60fps autofocus with fix mounting clip', 5, 1, 'Susana G. Carbonell', 1, 6500.00, 'Office Equipment'),
-('2022-11-03', '22-03', 'LV-22-101-06 to 10', 'Computer Headset (wired); HD; A4 tech AU-7P', 5, 5, 'Susana G. Carbonell', 5, 5500.00, 'Office Equipment'),
+('2022-11-03', '22-03', 'LV-22-101-06 to 10', 'Computer Headset ,(wired); HD; A4 tech AU-7P', 5, 5, 'Susana G. Carbonell', 5, 5500.00, 'Office Equipment'),
 ('2022-11-03', '22-03', 'HV-22-101-11 to 12', 'Wireless Directional Speaker', 5, 2, 'Susana G. Carbonell', 2, 18800.00, 'Office Equipment'),
-('2022-07-26', '22-11', 'LV-22-101-19', 'Dryesal Stamp(New TESDA logo)', 5, 1, 'Mabelle G. Panganiban', 1, 2000.00, 'Office Equipment');
+('2022-07-26', '22-11', 'LV-22-101-19', 'Dryesal Stamp,(New TESDA logo)', 5, 1, 'Mabelle G. Panganiban', 1, 2000.00, 'Office Equipment');
 
 -- ICT Equipment Category  
 INSERT INTO semi_expendable_property (date, ics_rrsp_no, semi_expendable_property_no, item_description, estimated_useful_life, quantity_issued, office_officer_issued, quantity_balance, amount_total, category) VALUES
@@ -207,3 +207,22 @@ CREATE TABLE ict_registry (
     created_at DATE NOT NULL
 );
 
+ALTER TABLE semi_expendable_property
+ADD COLUMN item_name VARCHAR(255) AFTER semi_expendable_property_no;
+
+UPDATE semi_expendable_property
+SET item_description = TRIM(BOTH '\'' FROM item_description)
+WHERE description LIKE '\'%\''; 
+
+UPDATE semi_expendable_property
+SET 
+    item_name = TRIM(SUBSTRING_INDEX(item_description, ',', 1)),
+    item_description = TRIM(SUBSTRING(item_description, LOCATE(',', item_description) + 1))
+WHERE item_description LIKE '%,%';
+
+UPDATE semi_expendable_property
+SET item_name = TRIM(item_description)
+WHERE (item_name IS NULL OR item_name = '');
+
+
+  

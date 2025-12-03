@@ -333,7 +333,7 @@ function generateICSNumberSimple($conn) {
                         </tr>
                         <?php 
                         // Only show semi-expendable items (you might want to add a category field to distinguish)
-                        $result = $conn->query("SELECT * FROM semi_expendable_property WHERE category = 'Semi-Expendable' OR category LIKE '%equipment%' OR category LIKE '%furniture%' OR item_name LIKE '%computer%' OR item_name LIKE '%printer%' OR item_name LIKE '%chair%' OR item_name LIKE '%table%'");
+                        $result = $conn->query("SELECT * FROM semi_expendable_property WHERE category = 'Semi-Expendable' OR category LIKE '%equipment%' OR category LIKE '%furniture%' OR item_description LIKE '%computer%' OR item_description LIKE '%printer%' OR item_description LIKE '%chair%' OR item_description LIKE '%table%'");
                         if (!$result || $result->num_rows == 0) {
                             // Fallback: show all items if no semi-expendable category exists yet
                             $result = $conn->query("SELECT * FROM items");

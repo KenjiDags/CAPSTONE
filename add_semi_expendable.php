@@ -1,11 +1,10 @@
 <?php
 require_once 'config.php';
-require_once 'sidebar.php'; // Add sidebar requirement
+require_once 'sidebar.php';
 
 $error = '';
 $success = '';
 
-// Valid categories
 $valid_categories = ['Other PPE', 'Office Equipment', 'ICT Equipment', 'Communication Equipment', 'Furniture and Fixtures'];
 
 // Handle form submission
@@ -13,11 +12,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $stmt = $conn->prepare("
             INSERT INTO semi_expendable_property 
-            (date, ics_rrsp_no, semi_expendable_property_no, item_description, estimated_useful_life, 
-             quantity_issued, office_officer_issued, quantity_returned, office_officer_returned, 
-             quantity_reissued, office_officer_reissued, quantity_disposed, quantity_balance, 
-             amount_total, category, fund_cluster, remarks) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            (date, ics_rrsp_no, semi_expendable_property_no, item_name, item_description, estimated_useful_life, 
+            quantity_issued, office_officer_issued, quantity_returned, office_officer_returned, 
+            quantity_reissued, office_officer_reissued, quantity_disposed, quantity_balance, 
+            amount_total, category, fund_cluster, remarks) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
         
         if (!$stmt) {
@@ -25,10 +24,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         
         $stmt->bind_param(
-            "ssssiississdssss",
+            "sssssississdssssss",
             $_POST['date'],
             $_POST['ics_rrsp_no'],
             $_POST['semi_expendable_property_no'],
+            $_POST['item_name'],            
             $_POST['item_description'],
             $_POST['estimated_useful_life'],
             $_POST['quantity_issued'],
@@ -146,8 +146,8 @@ $default_category = isset($_GET['category']) && in_array($_GET['category'], $val
     <div class="container">
         <div class="form-container">
             <header style="margin-bottom: 30px;">
-                <h1>Add New Semi-Expendable Property</h1>
-                <p>Register a new item in the semi-expendable property registry</p>
+                <h1>Add New Semi-expandable Property</h1>
+                <p>Register a new item in the semi-expandable property registry</p>
             </header>
 
             <?php if ($error): ?>
@@ -177,7 +177,7 @@ $default_category = isset($_GET['category']) && in_array($_GET['category'], $val
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="semi_expendable_property_no">Semi-Expendable Property No. <span class="required">*</span></label>
+                        <label for="semi_expendable_property_no">Semi-expandable Property No. <span class="required">*</span></label>
                         <input type="text" id="semi_expendable_property_no" name="semi_expendable_property_no" 
                                value="<?php echo $_POST['semi_expendable_property_no'] ?? ''; ?>" 
                                placeholder="e.g., HV-22-101-01" required>
@@ -194,11 +194,17 @@ $default_category = isset($_GET['category']) && in_array($_GET['category'], $val
                         </select>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label for="item_name">Item Name <span class="required">*</span></label>
+                    <input type="text" id="item_name" name="item_name" 
+                        value="<?php echo $_POST['item_name'] ?? ''; ?>" 
+                        placeholder="Enter item name" required>
+                </div>
 
                 <div class="form-group">
-                    <label for="item_description">Item Description <span class="required">*</span></label>
+                    <label for="item_description">Item Description </label>
                     <textarea id="item_description" name="item_description" 
-                              placeholder="Detailed description of the item..." required><?php echo $_POST['item_description'] ?? ''; ?></textarea>
+                              placeholder="Detailed description of the item..."><?php echo $_POST['item_description'] ?? ''; ?></textarea>
                 </div>
 
                 <div class="form-row">
@@ -287,7 +293,7 @@ $default_category = isset($_GET['category']) && in_array($_GET['category'], $val
 
                 <div style="margin-top: 30px;">
                     <button type="submit" class="btn btn-primary">Add Item</button>
-                    <a href="semi_expendable.php?category=<?php echo urlencode($default_category); ?>" class="btn btn-secondary">Cancel</a>
+                    <a href="semi_expandable.php?category=<?php echo urlencode($default_category); ?>" class="btn btn-secondary">Cancel</a>
                 </div>
             </form>
         </div>

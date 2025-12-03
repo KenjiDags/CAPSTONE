@@ -599,7 +599,7 @@ $recap_result = $conn->query("
 
             if (query.length < 2) return; // start search after 2 chars
 
-            fetch(`semi_expendible_search.php?query=${encodeURIComponent(query)}`)
+            fetch(`semi_expandable_search.php?query=${encodeURIComponent(query)}`)
                 .then(res => res.json())
                 .then(data => {
                     if (data.length === 0) return;

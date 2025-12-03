@@ -24,11 +24,18 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
             <?php
                 $dropdownActive = in_array($currentPage, ['inventory.php', 'ris.php', 'add_ris.php', 'view_ris.php', 'rsmi.php', 'SC.php', 'view_sc.php', 'rpci.php']);
-                $expendablesDropdownActive = in_array($currentPage, ['semi_expendible.php', 'ics.php', 'rspi.php','ict_registry.php']);
+                $expendablesDropdownActive = in_array($currentPage, ['semi_expandable.php', 'ics.php', 'rspi.php','ict_registry.php']);
                 $ppeDropdownActive = in_array($currentPage, ['ppe_item1.php', 'ppe_item2.php']);
                 ?>
 
                 <nav>
+
+                    <div class="dropdown">
+                        <?php if (!empty($_SESSION['user_id'])): ?>
+                            <a href="analytics.php" class="<?= $currentPage == 'analytics.php' ? 'active' : '' ?>">📊 Analytics</a>
+                        <?php endif; ?>
+                    </div>
+
                     <div class="dropdown <?= $dropdownActive ? 'open' : '' ?>">
                         <button class="dropdown-toggle <?= $dropdownActive ? 'active' : '' ?>">
                             🗂️ Office Supplies
@@ -48,7 +55,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                             🧰 Semi Expendables
                         </button>
                         <div class="dropdown-menu">
-                            <a href="semi_expendible.php" class="<?= $currentPage == 'semi_expendible.php' ? 'active' : '' ?>">📋 Supply List</a>
+                            <a href="semi_expendable.php" class="<?= $currentPage == 'semi_expandable.php' ? 'active' : '' ?>">📋 Supply List</a>
                             <a href="rspi.php" class="<?= $currentPage == 'rspi.php' ? 'active' : '' ?>">📑 RSPI</a>
                             <a href="ics.php" class="<?= $currentPage == 'ics.php' ? 'active' : '' ?>">📑 ICS</a>
                             <a href="ict_registry.php" class="<?= $currentPage == 'ict_registry.php' ? 'active' : '' ?>">📑 ICT</a>
@@ -67,9 +74,6 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                         </div>
                     </div>
                 
-                    <?php if (!empty($_SESSION['user_id'])): ?>
-                        <a href="analytics.php" class="<?= $currentPage == 'analytics.php' ? 'active' : '' ?>">📊 Analytics</a>
-                    <?php endif; ?>
                 </nav>
                 <!-- Sidebar footer: logout only -->
                 <div class="sidebar-footer">

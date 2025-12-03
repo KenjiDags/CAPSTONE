@@ -50,14 +50,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Login</title>
   <link rel="stylesheet" href="css/styles.css">
-  <style>
-    body { font-family: Arial, sans-serif; background:#f7f7f7; }
-    .login { width:320px; margin:80px auto; background:#fff; padding:20px; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
-    .login h2{margin:0 0 12px}
-    .login input{width:100%;padding:10px;margin:6px 0;border:1px solid #ccc;border-radius:4px}
-    .login button{width:100%;padding:10px;background:#2d89ef;color:#fff;border:0;border-radius:4px;cursor:pointer}
-    .error{color:#b00020;margin:8px 0}
-  </style>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background:#f7f7f7;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: url('images/TESDA-Logo.png') no-repeat center center fixed;
+            background-size: contain;
+        }
+
+        .login {
+            width: 520px;              /* MUCH larger */
+            background:#ffffff;
+            padding: 45px;             /* more padding */
+            border-radius: 14px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+        }
+
+        .login h2 {
+            margin:0 0 20px;
+            font-size: 26px;
+            text-align: center;
+        }
+
+        .login input {
+            width:100%;
+            padding:12px;
+            margin:10px 0;
+            border:1px solid #ccc;
+            border-radius:6px;
+            font-size: 15px;
+        }
+
+        .login button {
+            width:100%;
+            padding:12px;
+            background:#2d89ef;
+            color:#fff;
+            border:0;
+            border-radius:6px;
+            cursor:pointer;
+            font-size: 16px;
+        }
+
+        .login button:hover {
+            background:#1d6bc4;
+        }
+
+        .error {
+            color:#b00020;
+            margin:12px 0;
+            text-align:center;
+        }
+    </style>
 </head>
 <body>
   <div class="login">
