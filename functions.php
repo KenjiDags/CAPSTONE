@@ -79,8 +79,8 @@ function updateAverageCost($conn, $item_id) {
 }
 
 
-function logItemHistory($conn, $item_id, ?int $quantity_change = null, string $change_type = 'update', ?int $ris_id = null) {
-    // Fetch current item info
+function logItemHistory($conn, $item_id, ?int $quantity_change = null, string $change_type = 'update', ?int $reference_id = null) {
+    // Fetch current item info - try items table first, then semi_expendable_property
     $stmt = $conn->prepare("SELECT * FROM items WHERE item_id = ?");
     $stmt->bind_param("i", $item_id);
     $stmt->execute();
@@ -88,8 +88,22 @@ function logItemHistory($conn, $item_id, ?int $quantity_change = null, string $c
     $item = $result->fetch_assoc();
     $stmt->close();
 
+    // If not found in items, try semi_expendable_property
     if (!$item) {
-        return; // No such item, skip logging
+        $stmt = $conn->prepare("SELECT id as item_id, semi_expendable_property_no as stock_number, item_description as item_name, 
+                                item_description as description, 'unit' as unit, 0 as reorder_point, 
+                                (amount_total / NULLIF(quantity_balance, 0)) as average_unit_cost, 
+                                quantity_balance as quantity_on_hand, quantity_balance as initial_quantity
+                                FROM semi_expendable_property WHERE id = ?");
+        $stmt->bind_param("i", $item_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $item = $result->fetch_assoc();
+        $stmt->close();
+        
+        if (!$item) {
+            return; // No such item, skip logging
+        }
     }
 
     // Get previous quantity (latest history) or fallback to initial_quantity
@@ -119,7 +133,16 @@ function logItemHistory($conn, $item_id, ?int $quantity_change = null, string $c
         default              => 'no_change'
     };
 
-    // Insert into history, including ris_id if available
+    // Determine which reference column to use based on change_type
+    $ris_id = null;
+    $ics_id = null;
+    if ($change_type === 'issued_ics') {
+        $ics_id = $reference_id;
+    } else {
+        $ris_id = $reference_id;
+    }
+
+    // Insert into history, including ris_id or ics_id if available
     $insert = $conn->prepare("
         INSERT INTO item_history (
             item_id,
@@ -133,15 +156,16 @@ function logItemHistory($conn, $item_id, ?int $quantity_change = null, string $c
             quantity_change,
             change_direction,
             change_type,
-            ris_id
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ris_id,
+            ics_id
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ");
 
     // Use average_unit_cost for history records instead of unit_cost
     $unit_cost = $item['average_unit_cost'] ?? $item['unit_cost'];
 
     $insert->bind_param(
-        "issssidiissi",
+        "issssidiissii",
         $item_id,
         $item['stock_number'],
         $item['item_name'],
@@ -153,7 +177,8 @@ function logItemHistory($conn, $item_id, ?int $quantity_change = null, string $c
         $quantity_change,
         $change_direction,
         $change_type,
-        $ris_id
+        $ris_id,
+        $ics_id
     );
 
     $insert->execute();

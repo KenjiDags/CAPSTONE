@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         // Restore inventory quantities from old items
         foreach ($old_items as $stock_no => $old_qty) {
-            $stmt = $conn->prepare("UPDATE items SET quantity_on_hand = quantity_on_hand + ? WHERE stock_number = ?");
+            $stmt = $conn->prepare("UPDATE semi_expendable_property SET quantity_balance = quantity_balance + ? WHERE semi_expendable_property_no = ?");
             $stmt->bind_param("ds", $old_qty, $stock_no);
             $stmt->execute();
             $stmt->close();
@@ -84,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Only insert if there's an issued quantity
         if ($issued_qty > 0) {
             // Get item details
-            $stmt = $conn->prepare("SELECT item_id, item_name, description, unit, average_unit_cost FROM items WHERE stock_number = ?");
+            $stmt = $conn->prepare("SELECT id as item_id, item_description as description, amount_total, quantity_balance FROM semi_expendable_property WHERE semi_expendable_property_no = ?");
             $stmt->bind_param("s", $stock_no);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -92,20 +92,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->close();
 
             if ($item_data) {
-                $unit_cost = $item_data['average_unit_cost'];
+                $unit_cost = $item_data['quantity_balance'] > 0 ? $item_data['amount_total'] / $item_data['quantity_balance'] : 0;
                 $total_cost = $issued_qty * $unit_cost;
+                $unit = 'unit'; // Default unit since not in semi_expendable_property table
                 
                 // Insert ICS item
                 $stmt = $conn->prepare("INSERT INTO ics_items (ics_id, stock_number, quantity, unit, unit_cost, total_cost, 
                                        description, inventory_item_no, estimated_useful_life, serial_number)
                                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-                $stmt->bind_param("isdddssss", $ics_id, $stock_no, $issued_qty, $item_data['unit'], 
+                $stmt->bind_param("isdssdssss", $ics_id, $stock_no, $issued_qty, $unit, 
                                  $unit_cost, $total_cost, $item_data['description'], $stock_no, $useful_life, $serial_no);
                 $stmt->execute();
                 $stmt->close();
 
                 // Update inventory: deduct issued quantity
-                $stmt = $conn->prepare("UPDATE items SET quantity_on_hand = quantity_on_hand - ? WHERE stock_number = ?");
+                $stmt = $conn->prepare("UPDATE semi_expendable_property SET quantity_balance = quantity_balance - ? WHERE semi_expendable_property_no = ?");
                 $stmt->bind_param("ds", $issued_qty, $stock_no);
                 $stmt->execute();
                 $stmt->close();
@@ -335,29 +336,30 @@ function generateICSNumberSimple($conn) {
                             $result = $conn->query("SELECT 
                                     id,
                                     semi_expendable_property_no,
-                                    item_name,
                                     item_description,
                                     quantity_balance,
-                                    estimated_useful_life,
                                     amount_total,
+                                    estimated_useful_life,
                                     category
                                 FROM semi_expendable_property
-                                ORDER BY item_name ASC");
+                                ORDER BY item_description ASC");
                         
                         if ($result && $result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
-                                $stock_number = $row['stock_number'];
+                                $stock_number = $row['semi_expendable_property_no'];
                                 $existing_item = $ics_items[$stock_number] ?? null;
+                                $unit_cost = $row['quantity_balance'] > 0 ? $row['amount_total'] / $row['quantity_balance'] : 0;
+                                $description = $row['item_description'];
                                 
-                                echo '<tr class="item-row hidden" data-stock="' . htmlspecialchars(strtolower($stock_number)) . '" data-item_name="' . htmlspecialchars(strtolower($row['item_name'])) . '" data-description="' . htmlspecialchars(strtolower($row['description'])) . '" data-unit="' . htmlspecialchars(strtolower($row['unit'])) . '">';
+                                echo '<tr class="item-row hidden" data-stock="' . htmlspecialchars(strtolower($stock_number)) . '" data-description="' . htmlspecialchars(strtolower($description)) . '" data-category="' . htmlspecialchars(strtolower($row['category'])) . '">';
                                 echo '<td><input type="hidden" name="stock_number[]" value="' . htmlspecialchars($stock_number) . '">' . htmlspecialchars($stock_number) . '</td>';
-                                echo '<td>' . htmlspecialchars($row['item_name']) . '</td>';
-                                echo '<td>' . htmlspecialchars($row['description']) . '</td>';
-                                echo '<td>' . htmlspecialchars($row['unit']) . '</td>';
-                                echo '<td>' . htmlspecialchars($row['quantity_on_hand']) . '</td>';
-                                echo '<td>₱' . number_format($row['average_unit_cost'], 2) . '</td>';
-                                echo '<td><input type="number" name="issued_quantity[]" value="' . ($existing_item ? htmlspecialchars($existing_item['quantity']) : '') . '" min="0" max="' . htmlspecialchars($row['quantity_on_hand']) . '" step="0.01"></td>';
-                                echo '<td><input type="text" name="estimated_useful_life[]" value="' . ($existing_item ? htmlspecialchars($existing_item['estimated_useful_life']) : '') . '" placeholder="e.g., 5 years"></td>';
+                                echo '<td>' . htmlspecialchars($description) . '</td>';
+                                echo '<td>' . htmlspecialchars($row['category']) . '</td>';
+                                echo '<td>unit</td>';
+                                echo '<td>' . htmlspecialchars($row['quantity_balance']) . '</td>';
+                                echo '<td>₱' . number_format($unit_cost, 2) . '</td>';
+                                echo '<td><input type="number" name="issued_quantity[]" value="' . ($existing_item ? htmlspecialchars($existing_item['quantity']) : '') . '" min="0" max="' . htmlspecialchars($row['quantity_balance']) . '" step="0.01"></td>';
+                                echo '<td><input type="text" name="estimated_useful_life[]" value="' . ($existing_item ? htmlspecialchars($existing_item['estimated_useful_life']) : $row['estimated_useful_life']) . '" placeholder="e.g., 5 years"></td>';
                                 echo '<td><input type="text" name="serial_number[]" value="' . ($existing_item ? htmlspecialchars($existing_item['serial_number']) : '') . '" placeholder="Serial No."></td>';
                                 echo '</tr>';
                             }
