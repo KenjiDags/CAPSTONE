@@ -101,7 +101,7 @@ switch ($sort_by) {
                         <a href="add_ics.php?ics_id=' . $row["ics_id"] . '" title="Edit ICS">
                             <i class="fas fa-edit"></i> Edit
                         </a>
-                        <a href="export_ics.php?ics_id=' . $row["ics_id"] . '" title="Export ICS">
+                        <a href="ics_export.php?ics_id=' . $row["ics_id"] . '" title="Export ICS">
                             <i class="fas fa-download"></i> Export
                         </a>
                         <a href="ics.php?delete_ics_id=' . $row["ics_id"] . '" 

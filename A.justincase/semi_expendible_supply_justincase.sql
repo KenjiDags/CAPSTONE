@@ -1,4 +1,4 @@
-USE tesda_inventory;
+
 
 -- Create ICS header table (matching RIS structure)
 CREATE TABLE IF NOT EXISTS ics (
