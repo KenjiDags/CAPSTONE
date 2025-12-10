@@ -65,9 +65,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         .login {
-            width: 520px;              /* MUCH larger */
+            width: 520px;              
             background:#ffffff;
-            padding: 45px;             /* more padding */
+            padding: 45px;             
             border-radius: 14px;
             box-shadow: 0 6px 20px rgba(0,0,0,0.18);
         }

@@ -1,3 +1,4 @@
+USE tesda_inventory;
 CREATE TABLE `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(100) NOT NULL,
