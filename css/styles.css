@@ -2237,7 +2237,7 @@ body {
 }
 
 
-/* Responsive Design for Edit RIS */
+/*  Edit RIS */
 @media (max-width: 768px) {
     .edit-ris-page.content form {
         padding: 20px;
@@ -2259,7 +2259,7 @@ body {
     }
 }
 
-/* Responsive Design for RIS View */
+/*  RIS View */
 @media (max-width: 768px) {
     .ris-details strong {
         min-width: auto;
@@ -2441,7 +2441,6 @@ body {
     gap: 12px;
     align-items: center;
     margin-bottom: 12px;
-    /* optional: space between if you want search stretched */
     justify-content: flex-start;
 }
 

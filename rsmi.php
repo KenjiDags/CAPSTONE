@@ -43,7 +43,7 @@
 
         <!-- Export Section -->
         <div class="export-section">
-            <a href="rsmi_export.php" class="export-btn" target="_blank">
+            <a href="rsmi_export.php" class="export-btn">
                 📄 Export to PDF
             </a>
         </div>
