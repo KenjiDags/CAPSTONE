@@ -15,11 +15,11 @@ if (!$items_result || $items_result->num_rows === 0) {
     die("❌ No items found with history.");
 }
 
-// We'll store all stock cards here
+// Store stock cards
 $stock_cards = [];
 
 while ($item = $items_result->fetch_assoc()) {
-    // Fetch history for this item
+    // Fetch history
     $history_stmt = $conn->prepare("
         SELECT ih.*, r.ris_no AS ris_no
         FROM item_history ih
@@ -55,111 +55,131 @@ $conn->close();
 <meta charset="UTF-8">
 <title>Export All Stock Cards</title>
 <style>
-@media print {
-    .no-print { display:none !important; }
-    .page-break { page-break-after: always; }
-}
+/* Reset & base */
+* { margin:0; padding:0; box-sizing:border-box; }
 body {
-    margin: 20px;
-    font-family: "Times New Roman", serif;
+    font-family: Arial, sans-serif;
     font-size: 12px;
-    color: #000;
+    line-height:1.3;
+    background:#f5f5f5;
+    padding:20px;
 }
+.no-print { margin-bottom:20px; }
+
+/* Export Instructions */
+.export-instructions {
+    background-color:#fff3cd;
+    border:1px solid #ffeaa7;
+    border-radius:5px;
+    padding:15px;
+    margin-bottom:20px;
+}
+.export-instructions h3 { color:#856404; margin-bottom:10px; }
+.export-instructions ol { margin-left:20px; color:#856404; }
+.export-instructions .note { margin-top:10px; font-weight:bold; color:#856404; }
+
+/* Buttons */
+.button-container { margin-bottom:20px; }
+.btn {
+    display:inline-block;
+    padding:10px 20px;
+    text-decoration:none;
+    border-radius:5px;
+    font-weight:bold;
+    margin-right:10px;
+    border:none;
+    cursor:pointer;
+}
+.btn-primary { background-color:#007bff; color:white; }
+.btn-secondary { background-color:#6c757d; color:white; }
+.btn:hover { opacity:0.8; }
+
+/* Card wrapper */
 .card-wrapper {
-    max-width: 1000px;
-    margin: 0 auto;
-    border: 2px solid #000;
-    padding: 8px 12px 16px;
-    position: relative;
+    max-width:1000px;
+    margin:0 auto 30px;
+    border:2px solid black;
+    padding:12px;
+    position:relative;
+    background:white;
 }
-.appendix {
-    position: absolute;
-    top: 8px;
-    right: 12px;
-    font-size: 11px;
-    font-style: italic;
+
+/* Appendix label */
+.appendix-label {
+    position:absolute;
+    top:8px;
+    right:12px;
+    font-size:12px;
+    font-style:italic;
+    background:white;
+    padding:2px 5px;
+    z-index:10;
 }
-.title {
-    text-align: center;
-    font-weight: bold;
-    font-size: 18px;
-    margin: 4px 0 8px;
-    letter-spacing: 1px;
-}
+
+/* Card Title */
+.title { text-align:center; font-weight:bold; font-size:18px; margin-bottom:12px; }
+
+/* Meta Table */
 .meta-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 6px;
-    font-size: 12px;
+    width:100%;
+    border-collapse:collapse;
+    margin-bottom:8px;
+    font-size:12px;
 }
-.meta-table td {
-    padding: 3px 6px;
-    vertical-align: bottom;
-}
-.meta-item {
-    display: flex;
-    gap: 6px;
-    align-items: flex-end;
-}
-.meta-label {
-    font-weight: bold;
-    white-space: nowrap;
-}
-.field-line {
-    flex: 1 1 180px;
-    border-bottom: 1px solid #000;
-    min-height: 16px;
-    line-height: 16px;
-    padding: 0 4px;
-}
-.field-line.empty:after { content: "\00a0"; }
+.meta-table td { padding:4px 6px; vertical-align:bottom; }
+.meta-item { display:flex; gap:6px; align-items:flex-end; }
+.meta-label { font-weight:bold; white-space:nowrap; }
+.field-line { flex:1 1 180px; border-bottom:1px solid #000; min-height:16px; line-height:16px; padding:0 4px; }
+.field-line.empty:after { content:"\00a0"; }
+
+/* Stock Card Table */
 .stock-card-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 4px;
-    table-layout: fixed;
-    font-size: 11px;
+    width:100%;
+    border-collapse:collapse;
+    font-size:11px;
+    table-layout:fixed;
+    margin-top:4px;
 }
-.stock-card-table th, .stock-card-table td {
-    border: 1px solid #000;
-    padding: 4px 6px;
-    text-align: center;
-    vertical-align: middle;
+.stock-card-table th,
+.stock-card-table td {
+    border:1px solid #000;
+    padding:4px 6px;
+    text-align:center;
+    vertical-align:middle;
 }
-.stock-card-table th { font-weight: bold; }
-.no-history {
-    font-style: italic;
-    color: #444;
-}
-.print-button {
-    background: #007cba;
-    color: white;
-    padding: 6px 14px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 12px;
-    margin-right: 6px;
-}
+.stock-card-table th { font-weight:bold; background-color:#f0f0f0; }
+.no-history { font-style:italic; color:#444; }
 
-@page {
-    margin: 20mm; /* adjust page margins */
-}
+/* Page Break */
+.page-break { page-break-after:always; }
 
-/* Remove browser-added header/footer */
-@page {
-    size: auto;
-    margin: 0; /* remove default margins that allow headers/footers */
-}
-body {
-    margin: 20px;
+/* Print */
+@media print {
+    body { background:white; padding:0; margin:0; }
+    .export-instructions, .button-container { display:none; }
+    .card-wrapper { max-width:none; margin:0; page-break-inside:avoid; }
+    .appendix-label { top:8px; right:12px; font-size:12px; }
+    @page { margin:0.5in; size:A4; }
 }
 </style>
 </head>
 <body>
 
-<div class="no-print" style="margin-bottom: 12px;">
-    <button class="print-button" onclick="window.print()">🖨️ Print / Save as PDF</button>
+<div class="no-print">
+    <div class="export-instructions">
+        <h3>Export Instructions</h3>
+        <p><strong>To save as PDF:</strong></p>
+        <ol>
+            <li>Click the "Print/Save as PDF" button below.</li>
+            <li>In the print dialog, choose "Save as PDF" or equivalent.</li>
+            <li>Save to your desired location.</li>
+        </ol>
+        <p class="note">Best viewed in Chrome or Edge for consistent PDF output.</p>
+    </div>
+    <div class="button-container">
+        <button class="btn btn-primary" onclick="window.print()">📄 Print/Save as PDF</button>
+        <a href="sc.php" class="btn btn-secondary">← Back to Form</a>
+    </div>
 </div>
 
 <?php foreach ($stock_cards as $index => $data): ?>
@@ -167,7 +187,7 @@ body {
     <?php $history_rows = $data['history']; ?>
 
     <div class="card-wrapper">
-        <div class="appendix">Appendix 53</div>
+        <div class="appendix-label">Appendix 53</div>
         <div class="title">STOCK CARD</div>
 
         <table class="meta-table">
@@ -273,7 +293,6 @@ body {
     <?php if ($index < count($stock_cards) - 1): ?>
         <div class="page-break"></div>
     <?php endif; ?>
-
 <?php endforeach; ?>
 
 </body>

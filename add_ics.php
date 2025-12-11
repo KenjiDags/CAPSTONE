@@ -4,7 +4,6 @@
 <?php
 require 'functions.php';
 
-// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // Check if we're editing or creating new
@@ -77,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Insert new items and update inventory
     for ($i = 0; $i < count($stock_numbers); $i++) {
         $stock_no = $stock_numbers[$i];
-        $issued_qty = (float)$issued_quantities[$i];
+        $issued_qty = (int)$issued_quantities[$i];
         $useful_life = $estimated_useful_lives[$i];
         $serial_no = $serial_numbers[$i];
 
@@ -255,6 +254,15 @@ function generateICSNumberSimple($conn) {
 }
 ?>
 
+<?php
+// Generate ICS number only for new ICS
+if (!$is_editing) {
+    $auto_ics_number = generateICSNumber($conn);
+} else {
+    $auto_ics_number = $ics_data['ics_no']; 
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -320,7 +328,7 @@ function generateICSNumberSimple($conn) {
                             <th>Stock No.</th>
                             <th>Item</th>
                             <th>Description</th>
-                            <th>Unit</th>
+                            <th>Category</th>
                             <th>Quantity on Hand</th>
                             <th>Unit Cost</th>
                             <th>Issued Qty</th>
@@ -337,6 +345,7 @@ function generateICSNumberSimple($conn) {
                                     id,
                                     semi_expendable_property_no,
                                     item_description,
+                                    item_name,
                                     quantity_balance,
                                     amount_total,
                                     estimated_useful_life,
@@ -349,16 +358,21 @@ function generateICSNumberSimple($conn) {
                                 $stock_number = $row['semi_expendable_property_no'];
                                 $existing_item = $ics_items[$stock_number] ?? null;
                                 $unit_cost = $row['quantity_balance'] > 0 ? $row['amount_total'] / $row['quantity_balance'] : 0;
+                                $description = $row['item_description'];
                                 $item_name = $row['item_name'];
                                 
-                                echo '<tr class="item-row hidden" data-stock="' . htmlspecialchars(strtolower($stock_number)) . '" data-description="' . htmlspecialchars(strtolower($description)) . '" data-category="' . htmlspecialchars(strtolower($row['category'])) . '">';
+                                echo '<tr class="item-row hidden" 
+                                    data-stock="' . strtolower($stock_number) . '" 
+                                    data-item_name="' . strtolower($item_name) . '" 
+                                    data-item_description="' . strtolower($description) . '" 
+                                    data-category="' . strtolower($row['category']) . '">';
                                 echo '<td><input type="hidden" name="stock_number[]" value="' . htmlspecialchars($stock_number) . '">' . htmlspecialchars($stock_number) . '</td>';
                                 echo '<td>' . htmlspecialchars($item_name) . '</td>';
+                                echo '<td>' . htmlspecialchars($description) . '</td>';
                                 echo '<td>' . htmlspecialchars($row['category']) . '</td>';
-                                echo '<td>unit</td>';
                                 echo '<td>' . htmlspecialchars($row['quantity_balance']) . '</td>';
                                 echo '<td>₱' . number_format($unit_cost, 2) . '</td>';
-                                echo '<td><input type="number" name="issued_quantity[]" value="' . ($existing_item ? htmlspecialchars($existing_item['quantity']) : '') . '" min="0" max="' . htmlspecialchars($row['quantity_balance']) . '" step="0.01"></td>';
+                                echo '<td><input type="number" name="issued_quantity[]" value="' . ($existing_item ? htmlspecialchars($existing_item['quantity']) : '') . '" min="0" max="' . htmlspecialchars($row['quantity_balance']) . '" step="1"></td>';
                                 echo '<td><input type="text" name="estimated_useful_life[]" value="' . ($existing_item ? htmlspecialchars($existing_item['estimated_useful_life']) : $row['estimated_useful_life']) . '" placeholder="e.g., 5 years"></td>';
                                 echo '<td><input type="text" name="serial_number[]" value="' . ($existing_item ? htmlspecialchars($existing_item['serial_number']) : '') . '" placeholder="Serial No."></td>';
                                 echo '</tr>';
@@ -420,8 +434,8 @@ function generateICSNumberSimple($conn) {
                 // Get the data attributes
                 const stockNumber = row.getAttribute('data-stock');
                 const item_name = row.getAttribute('data-item_name');
-                const description = row.getAttribute('data-description');
-                const unit = row.getAttribute('data-unit');
+                const description = row.getAttribute('data-item_description');
+                const unit = row.getAttribute('data-category');
                 
                 // Check if search value matches any of the fields
                 if ((stockNumber && stockNumber.includes(searchValue)) || 

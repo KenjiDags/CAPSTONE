@@ -161,28 +161,62 @@ function logItemHistory($conn, $item_id, ?int $quantity_change = null, string $c
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ");
 
-    // Use average_unit_cost for history records instead of unit_cost
-    $unit_cost = $item['average_unit_cost'] ?? $item['unit_cost'];
+$unit_cost = $item['average_unit_cost'] ?? ($item['unit_cost'] ?? 0.0);
 
-    $insert->bind_param(
-        "issssidiissii",
-        $item_id,
-        $item['stock_number'],
-        $item['item_name'],
-        $item['description'],
-        $item['unit'],
-        $item['reorder_point'],
-        $unit_cost,
-        $current_quantity,
-        $quantity_change,
-        $change_direction,
-        $change_type,
-        $ris_id,
-        $ics_id
-    );
+$insert_sql = "
+    INSERT INTO item_history (
+        item_id,
+        stock_number,
+        item_name,
+        description,
+        unit,
+        reorder_point,
+        unit_cost,
+        quantity_on_hand,
+        quantity_change,
+        change_direction,
+        change_type,
+        ris_id
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+";
 
-    $insert->execute();
-    $insert->close();
+$insert = $conn->prepare($insert_sql);
+if (!$insert) {
+    die("Prepare failed: " . $conn->error);
 }
 
+$ris_id_val = $ris_id ?? null; // nullable integer
+
+// Convert change_direction to int (0, 1, etc.)
+// Assuming your earlier code has this variable as string, convert here:
+$change_direction_int = 0;
+if ($change_direction === 'increase') {
+    $change_direction_int = 1;
+} elseif ($change_direction === 'decrease') {
+    $change_direction_int = -1; // or whatever you use
+} else {
+    $change_direction_int = 0;
+}
+
+// Bind parameters — note 'i' for integers, 's' for strings, 'd' for doubles
+$insert->bind_param(
+    "issssidiissi",
+    $item_id,
+    $item['stock_number'],
+    $item['item_name'],
+    $item['description'],
+    $item['category'],
+    $item['reorder_point'],
+    $unit_cost,
+    $current_quantity,
+    $quantity_change,
+    $change_direction_int,
+    $change_type,
+    $ris_id_val
+);
+
+$insert->execute();
+$insert->close();
+
+    }
 ?>
