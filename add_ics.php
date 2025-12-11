@@ -342,18 +342,18 @@ function generateICSNumberSimple($conn) {
                                     estimated_useful_life,
                                     category
                                 FROM semi_expendable_property
-                                ORDER BY item_description ASC");
+                                ORDER BY item_name ASC");
                         
                         if ($result && $result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
                                 $stock_number = $row['semi_expendable_property_no'];
                                 $existing_item = $ics_items[$stock_number] ?? null;
                                 $unit_cost = $row['quantity_balance'] > 0 ? $row['amount_total'] / $row['quantity_balance'] : 0;
-                                $description = $row['item_description'];
+                                $item_name = $row['item_name'];
                                 
                                 echo '<tr class="item-row hidden" data-stock="' . htmlspecialchars(strtolower($stock_number)) . '" data-description="' . htmlspecialchars(strtolower($description)) . '" data-category="' . htmlspecialchars(strtolower($row['category'])) . '">';
                                 echo '<td><input type="hidden" name="stock_number[]" value="' . htmlspecialchars($stock_number) . '">' . htmlspecialchars($stock_number) . '</td>';
-                                echo '<td>' . htmlspecialchars($description) . '</td>';
+                                echo '<td>' . htmlspecialchars($item_name) . '</td>';
                                 echo '<td>' . htmlspecialchars($row['category']) . '</td>';
                                 echo '<td>unit</td>';
                                 echo '<td>' . htmlspecialchars($row['quantity_balance']) . '</td>';
